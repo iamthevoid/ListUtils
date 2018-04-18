@@ -1,0 +1,11 @@
+apply plugin: 'java-library'
+
+apply plugin: 'com.novoda.bintray-release'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'net.sourceforge.streamsupport:streamsupport:1.6.0'
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
