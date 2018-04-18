@@ -22,9 +22,10 @@ public class MainActivity extends Activity {
             long l = date.getTime() - Math.abs((new Random().nextLong() % 1000L * 60L * 60L * 24L * 31L));
             dates.add(new Date(l));
         }
-        Date max = ListUtil.maxByLong(dates, Date::getTime, new Date());
+
         System.out.println(Arrays.toString(dates.toArray()));
         System.out.println(Arrays.toString(ListUtil.map(dates, Date::getTime).toArray()));
-        System.out.println(max);
+        System.out.println(ListUtil.maxByLong(dates, Date::getTime, new Date()));
+        System.out.println(ListUtil.minByLong(dates, Date::getTime, new Date()));
     }
 }

@@ -24,6 +24,7 @@ public final class ListUtil {
                 .collect(Collectors.toList());
     }
 
+
     public static <T> void forEach(Collection<T> collection, Consumer<? super T> action) {
         StreamSupport.stream(collection).forEach(action);
     }
@@ -33,6 +34,7 @@ public final class ListUtil {
             action.accept(otem);
         }
     }
+
 
     public static int intSum(List<Integer> list) {
         return StreamSupport.stream(list).mapToInt(value -> value).sum();
@@ -47,6 +49,7 @@ public final class ListUtil {
         return StreamSupport.stream(list).mapToLong(value -> value).sum();
     }
 
+
     public static <T, E> List<E> map(Collection<T> list, Function<? super T, ? extends E> function) {
         return StreamSupport.stream(list)
                 .map(function::apply)
@@ -57,29 +60,9 @@ public final class ListUtil {
         return map(Arrays.asList(array), function);
     }
 
-    public static <T> T max(List<T> list, Comparator<T> function) {
-        return max(list, function, null);
-    }
-
-    public static <T> T min(List<T> list, Comparator<T> function) {
-        return min(list, function, null);
-    }
-
-    public static <T> T maxByLong(List<T> list, Function<T, Long> function, T defaultItem) {
-        return max(list, (f, s) -> Long.compare(function.apply(f),function.apply(s)), defaultItem);
-    }
-
-    public static <T> T maxByInt(List<T> list, Function<T, Integer> function, T defaultItem) {
-        return max(list, (f, s) -> Integer.compare(function.apply(f),function.apply(s)), defaultItem);
-    }
-
-    public static <T> T maxByDouble(List<T> list, Function<T, Double> function, T defaultItem) {
-        return max(list, (f, s) -> Double.compare(function.apply(f),function.apply(s)), defaultItem);
-    }
-
-    public static <T> T maxByFloat(List<T> list, Function<T, Float> function, T defaultItem) {
-        return max(list, (f, s) -> Float.compare(function.apply(f),function.apply(s)), defaultItem);
-    }
+    /**
+     * MAX
+     */
 
     public static <T> T max(List<T> list, Comparator<T> function, T defaultValue) {
         return StreamSupport.stream(list)
@@ -87,10 +70,42 @@ public final class ListUtil {
                 .orElse(defaultValue);
     }
 
-    public static <T> T min(List<T> list, Comparator<T> function, T defaultValue) {
-        return StreamSupport.stream(list)
-                .min(function)
-                .orElse(defaultValue);
+    public static <T> T max(List<T> list, Comparator<T> function) {
+        return max(list, function, null);
+    }
+
+    public static <T> T maxByLong(List<T> list, Function<T, Long> function) {
+        return max(list, (f, s) -> Long.compare(function.apply(f), function.apply(s)));
+    }
+
+    public static <T> T maxByLong(List<T> list, Function<T, Long> function, T defaultItem) {
+        return max(list, (f, s) -> Long.compare(function.apply(f), function.apply(s)), defaultItem);
+    }
+
+    public static <T> T maxByInt(List<T> list, Function<T, Integer> function) {
+        return max(list, (f, s) -> Integer.compare(function.apply(f), function.apply(s)));
+    }
+
+
+    public static <T> T maxByInt(List<T> list, Function<T, Integer> function, T defaultItem) {
+        return max(list, (f, s) -> Integer.compare(function.apply(f), function.apply(s)), defaultItem);
+    }
+
+    public static <T> T maxByDouble(List<T> list, Function<T, Double> function) {
+        return max(list, (f, s) -> Double.compare(function.apply(f), function.apply(s)));
+    }
+
+
+    public static <T> T maxByDouble(List<T> list, Function<T, Double> function, T defaultItem) {
+        return max(list, (f, s) -> Double.compare(function.apply(f), function.apply(s)), defaultItem);
+    }
+
+    public static <T> T maxByFloat(List<T> list, Function<T, Float> function) {
+        return max(list, (f, s) -> Float.compare(function.apply(f), function.apply(s)));
+    }
+
+    public static <T> T maxByFloat(List<T> list, Function<T, Float> function, T defaultItem) {
+        return max(list, (f, s) -> Float.compare(function.apply(f), function.apply(s)), defaultItem);
     }
 
     public static Long maxLong(List<Long> list) {
@@ -101,14 +116,6 @@ public final class ListUtil {
         return StreamSupport.stream(list).mapToLong(toLongFunction).max().orElse(0);
     }
 
-    public static Long minLong(List<Long> list) {
-        return minLong(list, l -> l);
-    }
-
-    public static <T> Long minLong(List<T> list, ToLongFunction<T> toLongFunction) {
-        return StreamSupport.stream(list).mapToLong(toLongFunction).min().orElse(0);
-    }
-
     public static Integer maxInt(List<Integer> list) {
         return maxInt(list, i -> i);
     }
@@ -117,20 +124,8 @@ public final class ListUtil {
         return StreamSupport.stream(list).mapToInt(toIntFunction).max().orElse(0);
     }
 
-    public static Integer minInt(List<Integer> list) {
-        return minInt(list, i -> i);
-    }
-
-    public static <T> Integer minInt(List<T> list, ToIntFunction<T> toIntFunction) {
-        return StreamSupport.stream(list).mapToInt(toIntFunction).min().orElse(0);
-    }
-
     public static Float maxFloat(List<Float> list) {
         return (float) StreamSupport.stream(list).mapToDouble(f -> f).max().orElse(0F);
-    }
-
-    public static Float minFloat(List<Float> list) {
-        return (float) StreamSupport.stream(list).mapToDouble(f -> f).min().orElse(0F);
     }
 
     public static Double maxDouble(List<Double> list) {
@@ -141,12 +136,79 @@ public final class ListUtil {
         return StreamSupport.stream(list).mapToDouble(toDoubleFunction).max().orElse(0);
     }
 
+    /**
+     * MIN
+     */
+
+    public static <T> T min(List<T> list, Comparator<T> function, T defaultValue) {
+        return StreamSupport.stream(list)
+                .min(function)
+                .orElse(defaultValue);
+    }
+
+    public static <T> T min(List<T> list, Comparator<T> function) {
+        return min(list, function, null);
+    }
+
+    public static Long minLong(List<Long> list) {
+        return minLong(list, l -> l);
+    }
+
+    public static <T> Long minLong(List<T> list, ToLongFunction<T> toLongFunction) {
+        return StreamSupport.stream(list).mapToLong(toLongFunction).min().orElse(0);
+    }
+
+    public static Integer minInt(List<Integer> list) {
+        return minInt(list, i -> i);
+    }
+
+    public static <T> Integer minInt(List<T> list, ToIntFunction<T> toIntFunction) {
+        return StreamSupport.stream(list).mapToInt(toIntFunction).min().orElse(0);
+    }
+
+    public static Float minFloat(List<Float> list) {
+        return (float) StreamSupport.stream(list).mapToDouble(f -> f).min().orElse(0F);
+    }
+
     public static Double minDouble(List<Double> list) {
         return minDouble(list, d -> d);
     }
 
     public static <T> Double minDouble(List<T> list, ToDoubleFunction<T> toDoubleFunction) {
         return StreamSupport.stream(list).mapToDouble(toDoubleFunction).min().orElse(0);
+    }
+
+
+    public static <T> T minByLong(List<T> list, Function<T, Long> function) {
+        return min(list, (f, s) -> Long.compare(function.apply(f), function.apply(s)));
+    }
+
+    public static <T> T minByLong(List<T> list, Function<T, Long> function, T defaultItem) {
+        return min(list, (f, s) -> Long.compare(function.apply(f), function.apply(s)), defaultItem);
+    }
+
+    public static <T> T minByInt(List<T> list, Function<T, Integer> function) {
+        return min(list, (f, s) -> Integer.compare(function.apply(f), function.apply(s)));
+    }
+
+    public static <T> T minByInt(List<T> list, Function<T, Integer> function, T defaultItem) {
+        return min(list, (f, s) -> Integer.compare(function.apply(f), function.apply(s)), defaultItem);
+    }
+
+    public static <T> T minByDouble(List<T> list, Function<T, Double> function) {
+        return min(list, (f, s) -> Double.compare(function.apply(f), function.apply(s)));
+    }
+
+    public static <T> T minByDouble(List<T> list, Function<T, Double> function, T defaultItem) {
+        return min(list, (f, s) -> Double.compare(function.apply(f), function.apply(s)), defaultItem);
+    }
+
+    public static <T> T minByFloat(List<T> list, Function<T, Float> function) {
+        return min(list, (f, s) -> Float.compare(function.apply(f), function.apply(s)));
+    }
+
+    public static <T> T minByFloat(List<T> list, Function<T, Float> function, T defaultItem) {
+        return min(list, (f, s) -> Float.compare(function.apply(f), function.apply(s)), defaultItem);
     }
 
     public static <T> List<T> flatten(List<List<T>> list) {
@@ -194,9 +256,5 @@ public final class ListUtil {
         }
 
         return list;
-    }
-
-    public interface Matcher<T, E> {
-        Predicate<? super E> predicate(T item);
     }
 }
