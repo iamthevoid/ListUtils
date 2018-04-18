@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import java8.util.function.Consumer;
-import java8.util.function.Function;
 import java8.util.function.Predicate;
 import java8.util.function.ToDoubleFunction;
 import java8.util.function.ToIntFunction;
@@ -50,7 +49,7 @@ public final class ListUtil {
 
     public static <T, E> List<E> map(Collection<T> list, Function<? super T, ? extends E> function) {
         return StreamSupport.stream(list)
-                .map(function)
+                .map(function::apply)
                 .collect(Collectors.toList());
     }
 
@@ -64,6 +63,22 @@ public final class ListUtil {
 
     public static <T> T min(List<T> list, Comparator<T> function) {
         return min(list, function, null);
+    }
+
+    public static <T> T maxByLong(List<T> list, Function<T, Long> function, T defaultItem) {
+        return max(list, (f, s) -> Long.compare(function.apply(f),function.apply(s)), defaultItem);
+    }
+
+    public static <T> T maxByInt(List<T> list, Function<T, Integer> function, T defaultItem) {
+        return max(list, (f, s) -> Integer.compare(function.apply(f),function.apply(s)), defaultItem);
+    }
+
+    public static <T> T maxByDouble(List<T> list, Function<T, Double> function, T defaultItem) {
+        return max(list, (f, s) -> Double.compare(function.apply(f),function.apply(s)), defaultItem);
+    }
+
+    public static <T> T maxByFloat(List<T> list, Function<T, Float> function, T defaultItem) {
+        return max(list, (f, s) -> Float.compare(function.apply(f),function.apply(s)), defaultItem);
     }
 
     public static <T> T max(List<T> list, Comparator<T> function, T defaultValue) {

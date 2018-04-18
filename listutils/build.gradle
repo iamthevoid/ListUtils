@@ -7,5 +7,15 @@ dependencies {
     implementation 'net.sourceforge.streamsupport:streamsupport:1.6.0'
 }
 
+publish {
+    groupId = 'iam.thevoid.listutils'
+    artifactId = 'listutils'
+    publishVersion = '0.2'
+    desc = 'Simple util to remove hugeness of stream support usage'
+    licences = ['Apache-2.0']
+    uploadName='ListUtils'
+    website = 'https://github.com/iamthevoid/ListUtils.git'
+}
+
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
