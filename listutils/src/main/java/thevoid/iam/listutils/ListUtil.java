@@ -60,6 +60,14 @@ public final class ListUtil {
         return map(Arrays.asList(array), function);
     }
 
+    public static <T, E> List<E> map(Iterable<T> iterable, Function<? super T, ? extends E> function) {
+        List<T> list = new ArrayList<>();
+        for (T t : iterable) {
+            list.add(t);
+        }
+        return map(list, function);
+    }
+
     /**
      * MAX
      */
