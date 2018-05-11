@@ -10,7 +10,7 @@ dependencies {
 publish {
     groupId = 'iam.thevoid.listutils'
     artifactId = 'listutils'
-    publishVersion = '0.3.2'
+    publishVersion = '0.3.3'
     desc = 'Simple util to remove hugeness of stream support usage'
     licences = ['Apache-2.0']
     uploadName='ListUtils'

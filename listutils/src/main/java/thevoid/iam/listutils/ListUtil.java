@@ -371,6 +371,15 @@ public final class ListUtil {
         return StreamSupport.stream(list).anyMatch(predicate);
     }
 
+
+    /**
+     * ALL MATCH
+     */
+
+    public static <T> boolean allMatch(List<T> list, Predicate<T> predicate) {
+        return StreamSupport.stream(list).allMatch(predicate);
+    }
+
     /**
      * MERGE
      */
