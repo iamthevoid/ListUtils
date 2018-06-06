@@ -1,20 +1,21 @@
-apply plugin: 'java-library'
+apply plugin: "java-library"
 
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: "com.novoda.bintray-release"
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'net.sourceforge.streamsupport:streamsupport:1.6.0'
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "net.sourceforge.streamsupport:streamsupport:1.6.0"
 }
 
 publish {
-    groupId = 'iam.thevoid.listutils'
-    artifactId = 'listutils'
-    publishVersion = '0.3.3'
-    desc = 'Simple util to remove hugeness of stream support usage'
-    licences = ['Apache-2.0']
-    uploadName='ListUtils'
-    website = 'https://github.com/iamthevoid/ListUtils.git'
+    groupId = "iam.thevoid.listutils"
+    artifactId = "listutils"
+    publishVersion = "0.4.0"
+    userOrg = "iamthevoid"
+    desc = "Simple util to remove hugeness of stream support usage"
+    licences = ["Apache-2.0"]
+    uploadName="iam.thevoid.ListUtils"
+    website = "https://github.com/iamthevoid/ListUtils.git"
 }
 
 sourceCompatibility = "1.8"

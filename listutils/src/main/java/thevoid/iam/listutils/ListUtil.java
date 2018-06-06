@@ -78,7 +78,6 @@ public final class ListUtil {
      */
 
 //    INT
-
     public static int intSum(List<Integer> list) {
         return StreamSupport.stream(list).mapToInt(value -> value).sum();
     }
@@ -166,7 +165,6 @@ public final class ListUtil {
      */
 
 //    With custom comparator
-
     public static <T> T max(List<T> list, Comparator<T> function, T defaultValue) {
         return StreamSupport.stream(list)
                 .max(function)
@@ -260,7 +258,6 @@ public final class ListUtil {
      */
 
 //    With custom comparator
-
     public static <T> T min(List<T> list, Comparator<T> function, T defaultValue) {
         return StreamSupport.stream(list)
                 .min(function)
@@ -345,6 +342,49 @@ public final class ListUtil {
 
     public static <T> Double minDouble(List<T> list, ToDoubleFunction<T> toDoubleFunction) {
         return StreamSupport.stream(list).mapToDouble(toDoubleFunction).min().orElse(0);
+    }
+
+    /**
+     * SORT
+     */
+
+    /**
+     * MAX
+     */
+
+//    With custom comparator
+    public static <T> List<T> sort(List<T> list, Comparator<T> function) {
+        return StreamSupport.stream(list)
+                .sorted(function)
+                .collect(Collectors.toList());
+    }
+
+//    By LONG value
+
+    public static <T> List<T> sortByLong(List<T> list, Function<T, Long> function) {
+        return sort(list, (f, s) -> Long.compare(function.apply(f), function.apply(s)));
+    }
+//    By INT value
+
+    public static <T> List<T> sortByInt(List<T> list, Function<T, Integer> function) {
+        return sort(list, (f, s) -> Integer.compare(function.apply(f), function.apply(s)));
+    }
+//    By DOUBLE value
+
+    public static <T> List<T> sortByDouble(List<T> list, Function<T, Double> function) {
+        return sort(list, (f, s) -> Double.compare(function.apply(f), function.apply(s)));
+    }
+
+//    By FLOAT value
+
+    public static <T> List<T> sortByFloat(List<T> list, Function<T, Float> function) {
+        return sort(list, (f, s) -> Float.compare(function.apply(f), function.apply(s)));
+    }
+
+//    By COMPARABLE value
+
+    public static <T extends Comparable<T>> List<T> sort(List<T> list) {
+        return sort(list, Comparable::compareTo);
     }
 
     /**
