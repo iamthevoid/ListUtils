@@ -3,16 +3,9 @@ package thevoid.iam.listutils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import java8.util.function.Consumer;
-import java8.util.function.Predicate;
-import java8.util.function.ToDoubleFunction;
-import java8.util.function.ToIntFunction;
-import java8.util.function.ToLongFunction;
-import java8.util.stream.Collectors;
-import java8.util.stream.StreamSupport;
 
 public final class ListUtil {
     private ListUtil() {
@@ -24,9 +17,9 @@ public final class ListUtil {
 
 
     public static <T, E> List<E> map(Collection<T> list, Function<? super T, ? extends E> function) {
-        return StreamSupport.stream(list)
-                .map(function::apply)
-                .collect(Collectors.toList());
+        List<E> mapped = new ArrayList<>(list.size());
+        forEach(list, t -> mapped.add(function.apply(t)));
+        return mapped;
     }
 
     public static <T, E> List<E> map(T[] array, Function<? super T, ? extends E> function) {
@@ -42,9 +35,12 @@ public final class ListUtil {
      */
 
     public static <T> List<T> filter(Collection<T> list, Predicate<? super T> predicate) {
-        return StreamSupport.stream(list)
-                .filter(predicate)
-                .collect(Collectors.toList());
+        List<T> filtered = new ArrayList<>();
+        forEach(list, t -> {
+            if (predicate.test(t))
+                filtered.add(t);
+        });
+        return filtered;
     }
 
     public static <T> List<T> filter(Iterable<T> iterable, Predicate<? super T> predicate) {
@@ -55,12 +51,17 @@ public final class ListUtil {
         return filter(Arrays.asList(array), predicate);
     }
 
+    public static <T, E> List<T> filterWithList(List<T> list, List<E> matchList, Matcher<T, E> matcher) {
+        return filter(list, item -> anyMatch(matchList, matcher.predicate(item)));
+    }
+
     /**
      * FOR EACH
      */
 
     public static <T> void forEach(Collection<T> collection, Consumer<? super T> action) {
-        StreamSupport.stream(collection).forEach(action);
+        for (T t : collection)
+            action.accept(t);
     }
 
     public static <T> void forEach(T[] array, Consumer<? super T> action) {
@@ -79,7 +80,12 @@ public final class ListUtil {
 
 //    INT
     public static int intSum(List<Integer> list) {
-        return StreamSupport.stream(list).mapToInt(value -> value).sum();
+        int sum = 0;
+        for (Integer integer : list) {
+            if (integer != null)
+                sum += integer;
+        }
+        return sum;
     }
 
     public static int intSum(Integer[] array) {
@@ -93,7 +99,7 @@ public final class ListUtil {
 //    INT with mapper
 
     public static <T> int intSum(List<T> list, ToIntFunction<T> mapper) {
-        return StreamSupport.stream(list).mapToInt(mapper).sum();
+        return intSum(map(list, mapper::applyAsInt));
     }
 
     public static <T> int intSum(T[] array, ToIntFunction<T> mapper) {
@@ -107,7 +113,12 @@ public final class ListUtil {
 //    DOUBLE
 
     public static double doubleSum(List<Double> list) {
-        return StreamSupport.stream(list).mapToDouble(value -> value).sum();
+        double sum = 0;
+        for (Double aDouble : list) {
+            if (aDouble != null)
+                sum += aDouble;
+        }
+        return sum;
     }
 
     public static double doubleSum(Double[] array) {
@@ -121,7 +132,7 @@ public final class ListUtil {
 //    DOUBLE with mapper
 
     public static <T> double doubleSum(List<T> list, ToDoubleFunction<T> mapper) {
-        return StreamSupport.stream(list).mapToDouble(mapper).sum();
+        return doubleSum(map(list, mapper::applyAsDouble));
     }
 
     public static <T> double doubleSum(T[] array, ToDoubleFunction<T> mapper) {
@@ -135,7 +146,12 @@ public final class ListUtil {
 //    LONG
 
     public static long longSum(List<Long> list) {
-        return StreamSupport.stream(list).mapToLong(value -> value).sum();
+        long sum = 0;
+        for (Long aLong : list) {
+            if (aLong != null)
+                sum += aLong;
+        }
+        return sum;
     }
 
     public static long longSum(Long[] array) {
@@ -149,7 +165,7 @@ public final class ListUtil {
 //    LONG with mapper
 
     public static <T> long longSum(List<T> list, ToLongFunction<T> mapper) {
-        return StreamSupport.stream(list).mapToLong(mapper).sum();
+        return longSum(map(list, mapper::applyAsLong));
     }
 
     public static <T> long longSum(T[] array, ToLongFunction<T> mapper) {
@@ -166,9 +182,12 @@ public final class ListUtil {
 
 //    With custom comparator
     public static <T> T max(List<T> list, Comparator<T> function, T defaultValue) {
-        return StreamSupport.stream(list)
-                .max(function)
-                .orElse(defaultValue);
+        T max = null;
+        for (T t : list) {
+            if (max == null || (t != null && function.compare(max, t) < 0))
+                max = t;
+        }
+        return max == null ? defaultValue : max;
     }
 
     public static <T> T max(List<T> list, Comparator<T> function) {
@@ -224,7 +243,7 @@ public final class ListUtil {
     }
 
     public static <T> Long maxLong(List<T> list, ToLongFunction<T> toLongFunction) {
-        return StreamSupport.stream(list).mapToLong(toLongFunction).max().orElse(0);
+        return maxLong(map(list, toLongFunction::applyAsLong));
     }
 
 //    Max INT
@@ -234,15 +253,15 @@ public final class ListUtil {
     }
 
     public static <T> Integer maxInt(List<T> list, ToIntFunction<T> toIntFunction) {
-        return StreamSupport.stream(list).mapToInt(toIntFunction).max().orElse(0);
+        return maxInt(map(list, toIntFunction::applyAsInt));
     }
 
 //    Max FLOAT
 
     public static Float maxFloat(List<Float> list) {
-        return (float) StreamSupport.stream(list).mapToDouble(f -> f).max().orElse(0F);
+        return maxByFloat(list, item -> item, 0f);
     }
-
+//
 //    Max DOUBLE
 
     public static Double maxDouble(List<Double> list) {
@@ -250,7 +269,7 @@ public final class ListUtil {
     }
 
     public static <T> Double maxDouble(List<T> list, ToDoubleFunction<T> toDoubleFunction) {
-        return StreamSupport.stream(list).mapToDouble(toDoubleFunction).max().orElse(0);
+        return maxDouble(map(list, toDoubleFunction::applyAsDouble));
     }
 
     /**
@@ -259,9 +278,13 @@ public final class ListUtil {
 
 //    With custom comparator
     public static <T> T min(List<T> list, Comparator<T> function, T defaultValue) {
-        return StreamSupport.stream(list)
-                .min(function)
-                .orElse(defaultValue);
+        T max = null;
+        for (T t : list) {
+            if (max == null || (t != null && function.compare(max, t) > 0))
+                max = t;
+        }
+
+        return max == null ? defaultValue : max;
     }
 
     public static <T> T min(List<T> list, Comparator<T> function) {
@@ -315,7 +338,7 @@ public final class ListUtil {
     }
 
     public static <T> Long minLong(List<T> list, ToLongFunction<T> toLongFunction) {
-        return StreamSupport.stream(list).mapToLong(toLongFunction).min().orElse(0);
+        return minLong(map(list, toLongFunction::applyAsLong));
     }
 
 //    Min INT
@@ -325,13 +348,13 @@ public final class ListUtil {
     }
 
     public static <T> Integer minInt(List<T> list, ToIntFunction<T> toIntFunction) {
-        return StreamSupport.stream(list).mapToInt(toIntFunction).min().orElse(0);
+        return minInt(map(list, toIntFunction::applyAsInt));
     }
 
 //    Min FLOAT
 
     public static Float minFloat(List<Float> list) {
-        return (float) StreamSupport.stream(list).mapToDouble(f -> f).min().orElse(0F);
+        return minByFloat(list, item -> item, 0f);
     }
 
 //    Min DOUBLE
@@ -341,7 +364,7 @@ public final class ListUtil {
     }
 
     public static <T> Double minDouble(List<T> list, ToDoubleFunction<T> toDoubleFunction) {
-        return StreamSupport.stream(list).mapToDouble(toDoubleFunction).min().orElse(0);
+        return minDouble(map(list, toDoubleFunction::applyAsDouble));
     }
 
     /**
@@ -354,9 +377,10 @@ public final class ListUtil {
 
 //    With custom comparator
     public static <T> List<T> sort(List<T> list, Comparator<T> function) {
-        return StreamSupport.stream(list)
-                .sorted(function)
-                .collect(Collectors.toList());
+        List<T> sorted = new ArrayList<>();
+        sorted.addAll(list);
+        Collections.sort(sorted, function);
+        return sorted;
     }
 
 //    By LONG value
@@ -392,23 +416,28 @@ public final class ListUtil {
      */
 
     public static <T> List<T> flatten(List<List<T>> list) {
-        return StreamSupport.stream(list)
-                .flatMap(StreamSupport::stream)
-                .collect(Collectors.toList());
+        List<T> flatten = new ArrayList<>();
+        for (List<T> l : list) {
+            flatten.addAll(l);
+        }
+        return flatten;
     }
 
     /**
      * ANY MATCH
      */
 
-    public static <T, E> List<T> anyMatch(List<T> list, List<E> matchList, Matcher<T, E> matcher) {
-        return StreamSupport.stream(list)
-                .filter(item -> StreamSupport.stream(matchList).anyMatch(matcher.predicate(item)))
-                .collect(Collectors.toList());
+    // old  anyMatch with same params renamed to 'filterWithList'
+    public static <T, E> boolean anyMatch(List<T> list, List<E> matchList, Matcher<T, E> matcher) {
+        return anyMatch(list, item -> anyMatch(matchList, matcher.predicate(item)));
     }
 
     public static <T> boolean anyMatch(List<T> list, Predicate<T> predicate) {
-        return StreamSupport.stream(list).anyMatch(predicate);
+        boolean anyMatch = false;
+        for (T t  : list) {
+            anyMatch = anyMatch || predicate.test(t);
+        }
+        return anyMatch;
     }
 
 
@@ -417,8 +446,13 @@ public final class ListUtil {
      */
 
     public static <T> boolean allMatch(List<T> list, Predicate<T> predicate) {
-        return StreamSupport.stream(list).allMatch(predicate);
+        boolean allMatch = true;
+        for (T t  : list) {
+            allMatch = allMatch && predicate.test(t);
+        }
+        return allMatch;
     }
+
 
     /**
      * MERGE
@@ -456,6 +490,14 @@ public final class ListUtil {
             list.add(item);
         }
 
+        return list;
+    }
+
+    public static <T> List<T> createList(int size, Function<Integer, T> creator) {
+        List<T> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            list.add(creator.apply(i));
+        }
         return list;
     }
 }

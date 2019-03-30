@@ -4,13 +4,13 @@ apply plugin: "com.novoda.bintray-release"
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "net.sourceforge.streamsupport:streamsupport:1.6.3"
+    testImplementation "junit:junit:4.12"
 }
 
 publish {
     groupId = "iam.thevoid.listutils"
     artifactId = "listutils"
-    publishVersion = "0.4.1"
+    publishVersion = "0.4.2"
     userOrg = "iamthevoid"
     desc = "Simple util to remove hugeness of stream support usage"
     licences = ["Apache-2.0"]
